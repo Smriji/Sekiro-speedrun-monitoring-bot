@@ -10,13 +10,13 @@ This tool monitors Speedrun.com for new World Records (WR) in SEKIRO and notifie
 ## Prerequisites
 - A Google Cloud Project with Cloud Run and Cloud Storage enabled.
 - A Discord Webhook URL.
-- subcategories.json file defining the categories and variables to monitor.
+- `subcategories.json` file defining the categories and variables to monitor.
 
 ## Configuration
 ### Environment Variables
 |Variable|Description|
 |----|----|
-|BUCKET_NAME|The name of the GCS bucket to store wr_list.json.|
+|BUCKET_NAME|The name of the GCS bucket to store `wr_list.json`.|
 |DISCORD_WEBHOOK_URL|Your Discord Webhook URL for notifications.|
 
 ### Local Files
