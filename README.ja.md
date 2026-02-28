@@ -1,4 +1,7 @@
 # Sekiro-speedrun-monitoring-bot
+
+[English](README.md)
+
 SEKIRO の Speedrun.com における世界記録（WR）の更新を監視し、Discord へ通知する Bot です。Google Cloud Run Jobs での動作を前提としており、記録の状態管理には Google Cloud Storage (GCS) を使用します。
 
 ## 主な機能

@@ -1,4 +1,7 @@
 # Sekiro-speedrun-monitoring-bot
+
+[日本語](README.ja.md)
+
 This tool monitors Speedrun.com for new World Records (WR) in SEKIRO and notifies a Discord channel via Webhook. It is designed to run as a Google Cloud Run Job, using Google Cloud Storage (GCS) to persist the current record state.
 
 ## Features
