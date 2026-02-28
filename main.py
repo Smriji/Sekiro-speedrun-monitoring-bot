@@ -56,7 +56,7 @@ def get_recent_runs():
             return response.json().get("data")
     return []
 
-def compre_runs(recent_runs, wr_list):
+def compare_runs(recent_runs, wr_list):
     """最近の記録とWRリストを比較して新しい記録を特定する"""
     new_record_video_list = []
     for run in recent_runs:
@@ -69,10 +69,9 @@ def compre_runs(recent_runs, wr_list):
                 wr["value"] == recent_runs_sub_category):
                 if wr["wr_time"] > recent_runs_time:
                     wr["wr_time"] = recent_runs_time
-                    if run.get("videos", {}).get("links", [])[0].get("uri"):
-                        new_record_video_list.append(run.get("videos", {}).get("links", [])[0].get("uri"))
-                    else:
-                        new_record_video_list.append("動画リンクなし")
+                    video_links = run.get("videos", {}).get("links", [])
+                    video_url = video_links[0].get("uri") if video_links else "動画リンクなし"
+                    new_record_video_list.append(video_url)
     return wr_list, new_record_video_list
 
 def send_discord_message(content):
@@ -146,7 +145,7 @@ def main():
         sys.exit(1)
 
     # 最近の記録とWRリストを比較して新しい記録を特定する
-    updated_wr_list, new_records = compre_runs(recent_runs, wr_list)
+    updated_wr_list, new_records = compare_runs(recent_runs, wr_list)
 
     if new_records:
         print(f"{len(new_records)} 件の新しい記録が見つかりました。")
