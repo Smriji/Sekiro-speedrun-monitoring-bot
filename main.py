@@ -8,12 +8,12 @@ import discord_webhook
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 if not BUCKET_NAME:
     print("BUCKET_NAMEが設定されていません。")
-    sys.exit(1)
+    sys.exit(0)
 
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 if not DISCORD_WEBHOOK_URL:
     print("DISCORD_WEBHOOK_URLが設定されていません。")
-    sys.exit(1)
+    sys.exit(0)
 
 game_id = "o1y9zk26"
 
@@ -92,7 +92,7 @@ def load_sub_categories():
             return json.load(f)
     except Exception as e:
         print(f"サブカテゴリの読み込みに失敗しました: {e}")
-        sys.exit(1)
+        sys.exit(0)
         
 def get_wr_time(url):
     response = requests.get(url)
