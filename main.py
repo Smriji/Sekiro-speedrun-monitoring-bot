@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import requests
+import time
 from google.cloud import storage
 import discord_webhook
 
@@ -81,10 +82,20 @@ def send_discord_message(content):
         return
         
     webhook = discord_webhook.DiscordWebhook(url=DISCORD_WEBHOOK_URL, content=content)
-    response = webhook.execute()
-    
-    if not response.ok:
-        print(f"Discord通知に失敗しました。ステータスコード: {response.status_code}")
+
+    for attempt in range(3):  # 最大3回のリトライ
+        try:
+            response = webhook.execute()
+            if response.status_code in [200, 204]:  # 成功
+                print("Discord通知が成功しました。")
+                return  # 成功したら終了
+            else:
+                print(f"Discord通知に失敗しました。ステータスコード: {response.status_code}")
+        except Exception as e:
+            print(f"Discord通知の送信中にエラーが発生しました: {e}")
+
+        print(f"リトライ {attempt + 1}/3...")
+        time.sleep(2)  # リトライ前に少し待機
 
 def load_sub_categories():
     try:
