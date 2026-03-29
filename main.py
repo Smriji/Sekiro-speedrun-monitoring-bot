@@ -106,15 +106,18 @@ def load_sub_categories():
         sys.exit(0)
         
 def get_wr_time(url):
+    """WRタイムをSpeedrun.com APIから取得する"""
     response = requests.get(url)
     response.raise_for_status()
     data = response.json().get("data", {})
     if data:
         if data.get("runs"):
             return data.get("runs")[0].get("run", {}).get("times", {}).get("primary_t", 99999)
+    # WRタイムが存在しない場合は非常に大きな値を返す
     return 99999
 
 def get_wr(sub_categories):
+    """WRリストを取得する"""
     wr_list = []
     for hardware in hardwares:
         for sub_category in sub_categories:
@@ -122,6 +125,7 @@ def get_wr(sub_categories):
             category_name = sub_category["category"]
             values = sub_category["values"]
             for value in values:
+                # サブカテゴリーごとにWRタイムを取得するためのURLを構築
                 url = f"https://www.speedrun.com/api/v1/leaderboards/{game_id}/category/{category_name}?var-{hardware}&var-{category_id}={value}&top=1"
                 wr_time = get_wr_time(url)
                 wr_list.append({
@@ -136,6 +140,7 @@ def main():
     # 現在のWRリストを読み込む
     wr_list = load_wr_list()
 
+    # WRリストが空の場合はサブカテゴリを読み込んでWRリストを取得し、保存する
     if wr_list == []:
         sub_categories = load_sub_categories()
         try:
