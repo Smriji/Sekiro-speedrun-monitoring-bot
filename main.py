@@ -57,12 +57,13 @@ def get_recent_runs():
             return response.json().get("data")
     return []
 
-def compare_runs(recent_runs, wr_list):
+def compare_runs(recent_runs, wr_list, category_ids):
     """最近の記録とWRリストを比較して新しい記録を特定する"""
     new_record_video_list = []
     for run in recent_runs:
         recent_runs_hardware = run.get("values", {}).get("gnxrw1jn")
-        recent_runs_sub_category = run.get("values", {}).get("ylqkog7l")
+        recent_runs_category_id = category_ids.get(run.get("category"))
+        recent_runs_sub_category = run.get("values", {}).get(recent_runs_category_id)
         recent_runs_time = run.get("times", {}).get("primary_t")
 
         for wr in wr_list:
@@ -140,9 +141,11 @@ def main():
     # 現在のWRリストを読み込む
     wr_list = load_wr_list()
 
+    sub_categories = load_sub_categories()
+    category_ids = {sub_category["category"]: sub_category["id"] for sub_category in sub_categories}
+
     # WRリストが空の場合はサブカテゴリを読み込んでWRリストを取得し、保存する
     if wr_list == []:
-        sub_categories = load_sub_categories()
         try:
             with open(wr_list_file, "w") as f:
                 wr_list = get_wr(sub_categories)
@@ -161,7 +164,7 @@ def main():
         sys.exit(1)
 
     # 最近の記録とWRリストを比較して新しい記録を特定する
-    updated_wr_list, new_records = compare_runs(recent_runs, wr_list)
+    updated_wr_list, new_records = compare_runs(recent_runs, wr_list, category_ids)
 
     if new_records:
         print(f"{len(new_records)} 件の新しい記録が見つかりました。")
